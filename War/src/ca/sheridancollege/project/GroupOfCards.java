@@ -7,51 +7,81 @@ package ca.sheridancollege.project;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 /**
  * A concrete class that represents any grouping of cards for a Game.
  * HINT, you might want to subclass this more than once.
  * The group of cards has a maximum size attribute which is flexible for reuse.
  * @author dancye
+ * @modifier 
  */
 public class GroupOfCards 
 {
    
-    //The group of cards, stored in an ArrayList
-    private ArrayList <Card> cards;
-    private int size;//the size of the grouping
+    Random random = new Random();
     
-    public GroupOfCards(int givenSize)
-    {
-        size = givenSize;
+    private ArrayList <Card> Deck = new ArrayList <Card>(52);
+    private ArrayList <Card> Shuffled = new ArrayList <Card>(52);
+    
+    GroupOfCards(){
+        String suit = "";
+        String rank = "";
+        
+        for(int x = 0; x < 4; x++){
+            switch (x) {
+                case 0:
+                    suit = "Clubs";
+                    break;
+                case 1:
+                    suit = "Hearts";
+                    break;
+                case 2:
+                    suit = "Spades";
+                    break;
+                case 3:
+                    suit = "Diamonds";
+                    break;
+                default:
+                    break;
+            }
+            for(int y = 1; y <= 13; y++){
+                if(y == 1){
+                    rank = "Ace";
+                }
+                else if (y > 1 && y < 11){
+                    rank = "" + y;
+                }
+                else if (y == 11){
+                    rank = "Jack";
+                }
+                else if (y == 12){
+                    rank = "Queen";
+                }
+                else if (y == 13){
+                    rank = "King";
+                }
+                Card card = new Card(suit,rank);
+                Deck.add(card);
+            }
+        }
     }
     
-    /**
-     * A method that will get the group of cards as an ArrayList
-     * @return the group of cards.
-     */
-    public ArrayList<Card> showCards()
-    {
-        return cards;
+    public ArrayList <Card> getShuffledDeck(){
+        return Shuffled;
     }
     
-    public void shuffle()
-    {
-        Collections.shuffle(cards);
-    }
-
-    /**
-     * @return the size of the group of cards
-     */
-    public int getSize() {
-        return size;
-    }
-
-    /**
-     * @param givenSize the max size for the group of cards
-     */
-    public void setSize(int givenSize) {
-        size = givenSize;
+    public void shuffle(){
+        ArrayList <Integer> usednums = new ArrayList<>(52);
+        int counter = 0;
+        while (counter < 52){
+            int cardnum = random.nextInt((51 - 0) + 1) + 0;
+            while (usednums.indexOf(cardnum) == -1){
+                usednums.add(counter, cardnum);
+                Shuffled.add(counter, Deck.get(cardnum));
+                counter++;
+            }
+        }
     }
     
 }//end class
