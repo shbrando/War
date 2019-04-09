@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public abstract class Game 
 {
-    private final String gameName;//the title of the game
+    final String gameName;//the title of the game
     private ArrayList <Player> players;// the players of the game
     
     public Game(String givenName)
@@ -62,3 +62,81 @@ public abstract class Game
    
     
 }//end class
+
+class War extends Game {
+    private ArrayList <WarPlayer> playerslist = new ArrayList <WarPlayer>(2);
+    public War(String givenName)
+    {
+        super(givenName);
+    }
+    
+    public void addPlayer(WarPlayer player){
+        playerslist.add(player);
+    }
+    
+    @Override
+    public void play(){
+
+        playerslist.get(0).play();
+        playerslist.get(1).play();
+        
+        if(playerslist.get(0).getPickedCard().getValue() > playerslist.get(1).getPickedCard().getValue()){
+            playerslist.get(0).addPoint();
+            System.out.println(playerslist.get(0).getPlayerID() + " has won the round!");
+            
+        }else if(playerslist.get(0).getPickedCard().getValue() < playerslist.get(1).getPickedCard().getValue()){
+            playerslist.get(1).addPoint();
+            System.out.println(playerslist.get(1).getPlayerID() + " has won the round!");
+        }else if(playerslist.get(0).getPickedCard().getValue() == playerslist.get(1).getPickedCard().getValue()){
+            if(playerslist.get(0).getDeckSize() != 0){
+                do{
+                    System.out.println("War! Re-drawing");
+                    playerslist.get(0).play();
+                    playerslist.get(1).play();
+                }while(playerslist.get(0).getPickedCard().getValue() == playerslist.get(1).getPickedCard().getValue() 
+                       && playerslist.get(0).getDeckSize() != 0);
+                if(playerslist.get(0).getDeckSize() != 0){
+                    if(playerslist.get(0).getPickedCard().getValue() > playerslist.get(1).getPickedCard().getValue()){
+                        playerslist.get(0).addPoint();
+                        System.out.println(playerslist.get(0).getPlayerID() + " has won the round!");
+                    }else if(playerslist.get(0).getPickedCard().getValue() < playerslist.get(1).getPickedCard().getValue()){
+                        playerslist.get(1).addPoint();
+                        System.out.println(playerslist.get(1).getPlayerID() + " has won the round!");
+                    }
+                }
+            }
+        }
+        System.out.println(playerslist.get(0).getPlayerID() + " has " + playerslist.get(0).getScore() + " points.");
+        System.out.println(playerslist.get(1).getPlayerID() + " has " + playerslist.get(1).getScore() + " points.");
+    }
+    
+    public boolean checkForEndOfGame(){
+        return playerslist.get(1).getDeckSize() == 0;
+    }
+    @Override
+    public void declareWinner(){
+        if(playerslist.get(0).getScore() > playerslist.get(1).getScore()){
+            System.out.println(playerslist.get(0).getPlayerID() + " has won the game with " + playerslist.get(0).getScore() + " points!");
+        }else if(playerslist.get(0).getScore() < playerslist.get(1).getScore()){
+            System.out.println(playerslist.get(1).getPlayerID() + " has won the game with " + playerslist.get(1).getScore() + " points!");
+        }else{
+            System.out.println("It's a tie! No one has won the game!");
+        }
+    }
+    
+    public void distributeCards(GroupOfCards deck, WarPlayer plr1, WarPlayer plr2){
+        ArrayList <Card> temp = deck.getShuffledDeck();
+        plr1.addCardToDeck(temp.get(0));
+        plr1.addCardToDeck(temp.get(1));
+        plr1.addCardToDeck(temp.get(2));
+        plr1.addCardToDeck(temp.get(3));
+        plr1.addCardToDeck(temp.get(4));
+        plr1.addCardToDeck(temp.get(5));
+        plr2.addCardToDeck(temp.get(6));
+        plr2.addCardToDeck(temp.get(7));
+        plr2.addCardToDeck(temp.get(8));
+        plr2.addCardToDeck(temp.get(9));
+        plr2.addCardToDeck(temp.get(10));
+        plr2.addCardToDeck(temp.get(11));
+    }
+}
